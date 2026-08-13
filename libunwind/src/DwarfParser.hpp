@@ -94,7 +94,7 @@ public:
   struct PrologInfo {
     uint32_t          cfaRegister;
     int32_t           cfaRegisterOffset;  // CFA = (cfaRegister)+cfaRegisterOffset
-    int64_t           cfaExpression;      // CFA = expression
+    intptr_t          cfaExpression;      // CFA = expression
     uint32_t          spExtraArgSize;
     RegisterLocation  savedRegisters[kMaxRegisterNumber + 1];
 #if defined(_LIBUNWIND_TARGET_AARCH64)
@@ -705,11 +705,11 @@ bool CFI_Parser<A>::parseFDEInstructions(A &addressSpace,
         break;
       case DW_CFA_def_cfa_expression:
         results->cfaRegister = 0;
-        results->cfaExpression = (int64_t)p;
+        results->cfaExpression = (intptr_t)p;
         length = addressSpace.getULEB128(p, instructionsEnd);
         assert(length < static_cast<pint_t>(~0) && "pointer overflow");
         p += static_cast<pint_t>(length);
-        _LIBUNWIND_TRACE_DWARF("DW_CFA_def_cfa_expression(expression=0x%" PRIx64
+        _LIBUNWIND_TRACE_DWARF("DW_CFA_def_cfa_expression(expression=0x%" PRIxPTR
                                ", length=%" PRIu64 ")\n",
                                results->cfaExpression, length);
         break;
