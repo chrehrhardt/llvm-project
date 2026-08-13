@@ -338,7 +338,7 @@ public:
   capability_t     getCapability(pint_t addr) { return get<capability_t>(addr); }
   __attribute__((always_inline))
   uintptr_t       getP(pint_t addr);
-  uint64_t        getRegister(pint_t addr);
+  uintptr_t       getRegister(pint_t addr);
   static uint64_t getULEB128(pint_t &addr, pint_t end);
   static int64_t  getSLEB128(pint_t &addr, pint_t end);
 
@@ -416,11 +416,15 @@ inline uintptr_t LocalAddressSpace::getP(pint_t addr) {
   return get<uintptr_t>(addr);
 }
 
-inline uint64_t LocalAddressSpace::getRegister(pint_t addr) {
+inline uintptr_t LocalAddressSpace::getRegister(pint_t addr) {
+#if defined(__CHERI_PURE_CAPABILITY__)
+  return getP(addr);
+#else
 #if __SIZEOF_POINTER__ == 8 || defined(__mips64)
   return get64(addr);
 #else
   return get32(addr);
+#endif
 #endif
 }
 

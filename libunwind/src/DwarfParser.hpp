@@ -114,7 +114,7 @@ public:
       }
     }
     void setRegister(uint64_t reg, RegisterSavedWhere newLocation,
-                     int64_t newValue, PrologInfo &initialState) {
+                     intptr_t newValue, PrologInfo &initialState) {
       checkSaveRegister(reg, initialState);
       savedRegisters[reg].location = newLocation;
       savedRegisters[reg].value = newValue;
@@ -124,7 +124,7 @@ public:
       checkSaveRegister(reg, initialState);
       savedRegisters[reg].location = newLocation;
     }
-    void setRegisterValue(uint64_t reg, int64_t newValue,
+    void setRegisterValue(intptr_t reg, int64_t newValue,
                           PrologInfo &initialState) {
       checkSaveRegister(reg, initialState);
       savedRegisters[reg].value = newValue;
@@ -642,7 +642,7 @@ bool CFI_Parser<A>::parseFDEInstructions(A &addressSpace,
               "malformed DW_CFA_register DWARF unwind, reg2 too big");
           return false;
         }
-        results->setRegister(reg, kRegisterInRegister, (int64_t)reg2,
+        results->setRegister(reg, kRegisterInRegister, (intptr_t)reg2,
                              initialState);
         _LIBUNWIND_TRACE_DWARF(
             "DW_CFA_register(reg=%" PRIu64 ", reg2=%" PRIu64 ")\n", reg, reg2);
@@ -720,7 +720,7 @@ bool CFI_Parser<A>::parseFDEInstructions(A &addressSpace,
               "malformed DW_CFA_expression DWARF unwind, reg too big");
           return false;
         }
-        results->setRegister(reg, kRegisterAtExpression, (int64_t)p,
+        results->setRegister(reg, kRegisterAtExpression, (intptr_t)p,
                              initialState);
         length = addressSpace.getULEB128(p, instructionsEnd);
         assert(length < static_cast<uint64_t>(~0) && "pointer overflow");
@@ -803,7 +803,7 @@ bool CFI_Parser<A>::parseFDEInstructions(A &addressSpace,
               "malformed DW_CFA_val_expression DWARF unwind, reg too big");
           return false;
         }
-        results->setRegister(reg, kRegisterIsExpression, (int64_t)p,
+        results->setRegister(reg, kRegisterIsExpression, (intptr_t)p,
                              initialState);
         length = addressSpace.getULEB128(p, instructionsEnd);
         assert(length < static_cast<pint_t>(~0) && "pointer overflow");
